@@ -1,4 +1,5 @@
 ﻿﻿using System;
+using System.IO;
 
 using Markov;
 
@@ -6,12 +7,56 @@ namespace AppraisalBot
 {
     class Program
     {
-        static void Main(string[] args)
+        public Stream awsLambdaHandler(Stream inputStream)
         {
+            Console.WriteLine("starting via lambda");
+            Main(new string[0]);
+            return inputStream;
+        }
+
+        public static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.WriteLine("Beginning program");
+
+            InitializeTwitterCredentials();
+
             for (int i = 0; i < 30; i++)
             {
                 Console.WriteLine(GenerateQuote());
             }
+
+            //string quote = GenerateQuote();
+
+            //TweetQuote( quote );
+        }
+
+        static void InitializeTwitterCredentials()
+        {
+            string consumerKey = System.Environment.GetEnvironmentVariable ("twitterConsumerKey");
+            string consumerSecret = System.Environment.GetEnvironmentVariable ("twitterConsumerSecret");
+            string accessToken = System.Environment.GetEnvironmentVariable ("twitterAccessToken");
+            string accessTokenSecret = System.Environment.GetEnvironmentVariable ("twitterAccessTokenSecret");
+
+            if (consumerKey == null)
+            {
+                using ( StreamReader fs = File.OpenText( "localconfig/twitterKeys.txt" ) )
+                {
+                    consumerKey = fs.ReadLine();
+                    consumerSecret = fs.ReadLine();
+                    accessToken = fs.ReadLine();
+                    accessTokenSecret = fs.ReadLine();
+                }
+            }
+
+            Tweetinvi.Auth.SetUserCredentials(consumerKey, consumerSecret, accessToken, accessTokenSecret);
+        }
+
+        static void TweetQuote( string quote )
+        {
+            Console.WriteLine("Publishing tweet");
+            var tweet = Tweetinvi.Tweet.PublishTweet(quote);
         }
 
         static string GenerateQuote()
@@ -79,7 +124,6 @@ namespace AppraisalBot
                 "Everyone, stop firing! We're shooting at our own men! They're not Umbarans, they're clones! Take off your helmets. Show them you're not the enemy.",
                 "Explain your actions.",
                 "Fives! Fives! Fives...",
-                "Fives, no, Fives, come on, Fives. Come on, stay with me, stay with me, Fives. Fives, don't go.",
                 "Fives, no!",
                 "Fives, we are listening to you. We only want to help.",
                 "Full stop, Wolffe! Dig in! This is where we finish the battle!",
@@ -127,7 +171,7 @@ namespace AppraisalBot
                 "Look sharp, rookies. As long as those tweezers occupy this post, our home planet of Kamino is at risk.",
                 "Maybe, back in the day.",
                 "Next time, just tell me to jump.",
-                "No, Fives, come on stay with me. Stay with me Fives! Fives!",
+                "No, Fives, come on stay with me. Stay with me, Fives! Fives!",
                 "Oh, I'm proud of my service. But I really hate this armor.",
                 "Ok, listen up. We're going to form two divisions, march down, and head through the gorge to the airbase.",
                 "Relax. Just as I thought. Looks like one of those new commando droids.",
