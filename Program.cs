@@ -29,13 +29,32 @@ namespace AppraisalBot
 
             var chain = new MarkovChain<string>(1);
 
-            foreach (string quote in GetQuotes() )
+            foreach (string sourceQuote in GetQuotes() )
             {
-                string[] words = quote.Split(' ');
+                string[] words = sourceQuote.Split(' ');
                 chain.Add(words);
             }
 
-            return string.Join(" ", chain.Chain(rand));
+            string generatedQuote = string.Join(" ", chain.Chain(rand));
+            
+            // Truncate long quotes to one sentence
+            if ( generatedQuote.Length >= 140 )
+            {
+                char[] sentenceEnders = new char[] { '.', '!', '?' };
+
+                int earliestSentenceEnderIndex = Int32.MaxValue;
+                foreach ( char ender in sentenceEnders )
+                {
+                    int enderIndex = generatedQuote.IndexOf( ender );
+                    if ( enderIndex > 0 && enderIndex < earliestSentenceEnderIndex )
+                    {
+                        earliestSentenceEnderIndex = enderIndex;
+                    }
+                }
+                generatedQuote = generatedQuote.Substring(0,earliestSentenceEnderIndex + 1);
+            }
+
+            return generatedQuote;
         }
 
         static string[] GetQuotes()
@@ -73,7 +92,7 @@ namespace AppraisalBot
                 "Hey, I bet you know a thing or two about mechanics.",
                 "Hey, kid.",
                 "He gave us a bit of a chase, Sir.",
-                "He's a runnin'. Hit that line! Bring him up.",
+                "He's running. Hit that line! Bring him up.",
                 "He's wound up tight, but he's a good soldier.",
                 "Hit it! Now!",
                 "Hold your ground!",
@@ -150,7 +169,7 @@ namespace AppraisalBot
                 "We have to warn command.",
                 "We have to warn the Republic about the invasion. They'll take notice when the all-clear signal stops.",
                 "We need to fall back, get them to follow us. If we can draw them out, we can see them. If we can see them, we can hit them! All squads, fall back now!",
-                "We roll them - the proton bombs. We roll them across the hangar into the feet of the walkers, and then we blast them.",
+                "We roll the proton bombs. We roll them across the hangar into the feet of the walkers, and then we blast them.",
                 "We'll need every thermal detonator in the inventory.",
                 "We're cut off. Off the platform!",
                 "What did you just say?",
