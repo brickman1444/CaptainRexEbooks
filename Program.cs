@@ -8,6 +8,25 @@ namespace AppraisalBot
     {
         static void Main(string[] args)
         {
+            for (int i = 0; i < 30; i++)
+            {
+                Console.WriteLine(GenerateQuote());
+            }
+        }
+
+        static string GenerateQuote()
+        {
+            var rand = new Random();
+
+            int order = 1;
+            if ( rand.NextDouble() > 0.95 )
+            {
+                // Add a small chance of a higher order chain. The higher order chains
+                // produce output that is a lot closer to the source text. Too close
+                // to have on all the time.
+                order = 2;
+            }
+
             var chain = new MarkovChain<string>(1);
 
             foreach (string quote in GetQuotes() )
@@ -16,13 +35,7 @@ namespace AppraisalBot
                 chain.Add(words);
             }
 
-            var rand = new Random();
-
-            for (int i = 0; i < 30; i++)
-            {
-                var sentence = string.Join(" ", chain.Chain(rand));
-                Console.WriteLine(sentence);
-            }
+            return string.Join(" ", chain.Chain(rand));
         }
 
         static string[] GetQuotes()
