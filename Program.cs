@@ -22,14 +22,14 @@ namespace AppraisalBot
 
             InitializeTwitterCredentials();
 
-            for (int i = 0; i < 30; i++)
-            {
-                Console.WriteLine(GenerateQuote());
-            }
+            // for (int i = 0; i < 10; i++)
+            // {
+            //     Console.WriteLine(GenerateQuote());
+            // }
 
-            //string quote = GenerateQuote();
+            string quote = GenerateQuote();
 
-            //TweetQuote( quote );
+            TweetQuote(quote);
         }
 
         static void InitializeTwitterCredentials()
