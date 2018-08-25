@@ -3,7 +3,7 @@ using System.IO;
 
 using Markov;
 
-namespace AppraisalBot
+namespace CaptainRexEbooks
 {
     class Program
     {
