@@ -5,9 +5,9 @@ using Markov;
 
 namespace CaptainRexEbooks
 {
-    class Program
+    static class Program
     {
-        public Stream awsLambdaHandler(Stream inputStream)
+        public static Stream awsLambdaHandler(Stream inputStream)
         {
             Console.WriteLine("starting via lambda");
             Main(new string[0]);
