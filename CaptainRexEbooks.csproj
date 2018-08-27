@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="TweetinviAPI" Version="2.1.0" />
-    <PackageReference Include="AWSSDK.Lambda" Version="3.3.15.5" />
+    <PackageReference Include="Amazon.Lambda.Core" Version="1.0.0" />
     <PackageReference Include="Markov" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
