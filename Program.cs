@@ -63,13 +63,13 @@ namespace CaptainRexEbooks
         {
             var rand = new Random();
 
-            int order = 1;
+            int order = 2;
             if ( rand.NextDouble() > 0.5 )
             {
                 // Add a small chance of a higher order chain. The higher order chains
                 // produce output that is a lot closer to the source text. Too close
                 // to have on all the time.
-                order = 2;
+                order = 3;
             }
 
             var chain = new MarkovChain<string>(1);
@@ -196,7 +196,7 @@ namespace CaptainRexEbooks
                 "I've dispatched two men on a stealth incursion into the airbase. They've been ordered to co-opt starfighters and use them against the tanks.",
                 "Just like the old days.",
                 "Just make it fast. Those droids are getting close.",
-                "Kanan's right. We need one Jedi up there manning the cannon And another Jedi down here to lead us out of this mess. You are the only ones who can see in this storm. Sabine, spot him. Hey, kid. You might need that. And hang on tight.",
+                "Kanan's right. We need one Jedi up there manning the cannon and another Jedi down here to lead us out of this mess. You are the only ones who can see in this storm. Sabine, spot him. Hey, kid. You might need that. And hang on tight.",
                 "Keep an eye on this regulator. The line can overheat and shut down. No line, no joopa, no Zeb.",
                 "Let's move.",
                 "Looks like we got ourselves a batch of shinies, Commander.",
