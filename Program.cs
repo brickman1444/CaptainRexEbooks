@@ -22,9 +22,23 @@ namespace CaptainRexEbooks
 
             InitializeTwitterCredentials();
 
+            //EvaluateOrders();
+
+            // string[] quotes = GetQuotes();
+
             // for (int i = 0; i < 10; i++)
             // {
-            //     Console.WriteLine(GenerateQuote());
+            //     string quote = GenerateQuote();
+            //     bool isCopy = false;
+            //     foreach ( string inputQuote in quotes )
+            //     {
+            //         if (inputQuote.Contains(quote))
+            //         {
+            //             isCopy = true;
+            //             break;
+            //         }
+            //     }
+            //     Console.WriteLine(quote + " " + isCopy);
             // }
 
             string quote = GenerateQuote();
@@ -55,7 +69,7 @@ namespace CaptainRexEbooks
 
         static void TweetQuote( string quote )
         {
-            Console.WriteLine("Publishing tweet");
+            Console.WriteLine("Publishing tweet: " + quote);
             var tweet = Tweetinvi.Tweet.PublishTweet(quote);
         }
 
@@ -71,6 +85,8 @@ namespace CaptainRexEbooks
                 // to have on all the time.
                 order = 2;
             }
+
+            Console.WriteLine("order " + order);
 
             MarkovChain<string> chain = GetChain(order);
 
@@ -90,6 +106,8 @@ namespace CaptainRexEbooks
                         earliestSentenceEnderIndex = enderIndex;
                     }
                 }
+                Console.WriteLine("truncating quote. Original: " + generatedQuote);
+
                 generatedQuote = generatedQuote.Substring(0,earliestSentenceEnderIndex + 1);
             }
 
