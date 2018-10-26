@@ -1,5 +1,6 @@
 ﻿﻿using System;
 using System.IO;
+using System.Collections.Generic;
 
 using Markov;
 
@@ -22,6 +23,7 @@ namespace CaptainRexEbooks
 
             InitializeTwitterCredentials();
 
+            //EvaluateCorpus();
             //EvaluateOrders();
 
             // string[] quotes = GetQuotes();
@@ -149,6 +151,34 @@ namespace CaptainRexEbooks
 
                 Console.WriteLine("Order: " + order + " NumStates: " + numStates + " NumOptionsTotal: " + numOptions + " AvgOptionsPerState " + ((float)numOptions / (float)numStates));
             }
+        }
+
+        static void EvaluateCorpus()
+        {
+            string[] quotes = GetQuotes();
+            Console.WriteLine("NumLines: " + quotes.Length);
+
+            HashSet<string> uniqueWords = new HashSet<string>();
+            int numTotalWords = 0;
+
+            foreach ( string line in quotes )
+            {
+                string[] words = line.Split(' ');
+
+                numTotalWords += words.Length;
+                uniqueWords.UnionWith( words );
+
+                foreach ( string word in words )
+                {
+                    if ( word == null || word == "" )
+                    {
+                        throw new Exception("Invalid string in corpus.");
+                    }
+                }
+            }
+
+            Console.WriteLine("NumTotalWords: " + numTotalWords);
+            Console.WriteLine("NumUniqueWords: " + uniqueWords.Count);
         }
 
         static string[] GetQuotes()
@@ -322,7 +352,7 @@ namespace CaptainRexEbooks
                 "The General's giving you an order, Dogma.",
                 "The guard got his messages out there somehow. We just got to find them.",
                 "The name's Rex, but you can call me Captain or Sir.",
-                "The only people in here are brothers. ",
+                "The only people in here are brothers.",
                 "The traverse controls are over here on the left, and the elevation's on the right.",
                 "The Umbarans are advancing!",
                 "The Umbarans must've regrouped for a counterattack. Everyone, we must hold this position!",
