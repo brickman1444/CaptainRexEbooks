@@ -80,7 +80,7 @@ namespace CaptainRexEbooks
             Random rand = new Random();
 
             int order = 1;
-            if ( rand.NextDouble() > 0.7 )
+            if ( rand.NextDouble() > 0.5 )
             {
                 // Add a small chance of a higher order chain. The higher order chains
                 // produce output that is a lot closer to the source text. Too close
