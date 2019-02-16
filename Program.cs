@@ -185,6 +185,7 @@ namespace CaptainRexEbooks
         {
             return new string[] {
                 "Actually my name is Rex. Captain, 501st Clone Battalion. Meet Commanders Gregor and Wolffe.",
+                "Ahsoka, you don't have to go to Malachor alone. I can be there in two rotations.",
                 "All here, Sir.",
                 "All right, get in your groups. Let's move out.",
                 "All right, I'm putting my pistols down.",
@@ -196,6 +197,7 @@ namespace CaptainRexEbooks
                 "And you are a natural.",
                 "Anyone else in the mess able to confirm what you two are saying?",
                 "Anyone with you?",
+                "Are you sure about this?",
                 "A few of General Skywalker's plans seemed reckless too, but they worked.",
                 "A lot of the General's plans involve falling.",
                 "A lot of General Skywalker's plans seemed reckless at times, but they worked.",
@@ -329,6 +331,7 @@ namespace CaptainRexEbooks
                 "Look, Kix, it's more important to save yourself right now. If we survive, you can patch up the wounded later.",
                 "Maybe this tactical droid will tell us how they knew our plan.",
                 "Maybe, back in the day.",
+                "May the force be with you.",
                 "Mines! Nobody move!",
                 "Move it, trooper.",
                 "My cover's blown, it's time to go, but I decide not to use a ship because it's too obvious.",
@@ -476,6 +479,7 @@ namespace CaptainRexEbooks
                 "You have to start somewhere.",
                 "You know what's funny, traitor? We knew you'd never take a chance on the exits while they were blocked.",
                 "You know, I can't figure those villagers not wanting to fight. No pride I guess.",
+                "You know, I could've ordered you to take me along.",
                 "You know, I don't think he likes me. Or ever will. Can't say I blame him. The war left its scars on all of us.",
                 "You know, I've outserved my purpose for that kind of fighting, I'm afraid. After the war, I questioned the point of the whole thing. All those men died, and for what?",
                 "You put us right in the middle of 'em to get us a shot. It's crazy, but it's probably our best chance.",
