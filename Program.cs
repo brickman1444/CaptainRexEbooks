@@ -319,6 +319,7 @@ namespace CaptainRexEbooks
                 "I've assembled a list of potential bases and clearance codes and a few protocols the Imperials still use. Should be of some use.",
                 "I've called in an air strike on the enemy positions.",
                 "I've dispatched two men on a stealth incursion into the airbase. They've been ordered to co-opt starfighters and use them against the tanks.",
+                "I've watched so many of my brothers fall during this war: Fives, Echo, Hevy",
                 "Jesse, take the right flank. Dogma, take the left flank.",
                 "Just like the old days.",
                 "Just make it fast. Those droids are getting close.",
