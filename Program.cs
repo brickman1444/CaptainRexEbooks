@@ -1,6 +1,8 @@
 ﻿﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
+using System.Diagnostics;
 
 using Markov;
 
@@ -15,6 +17,87 @@ namespace CaptainRexEbooks
             return inputStream;
         }
 
+        public static void ChainWithBackoff(int seed)
+        {
+            var chain1 = GetChain(1);
+            var chain2 = GetChain(2);
+
+            Random rand = new Random(seed);
+
+            List<string> result = new List<string>(Generator( Enumerable.Empty<string>(), chain1, chain2, rand ));
+            Debug.Assert( result != null);
+            string joinedString = string.Join(" ", result);
+            Console.WriteLine(joinedString);
+        }
+
+        public static IEnumerable<string> Generator( IEnumerable<string> previous, MarkovChain<string> chain1, MarkovChain<string> chain2, Random rand )
+        {
+            Queue<string> workingQueue = new Queue<string>(previous);
+
+            while (true)
+            {
+                string nextLeaf = null;
+
+                Dictionary<string, int> nextStates2 = chain2.GetNextStates(workingQueue);
+                if (nextStates2 != null && nextStates2.Count >= 2)
+                {
+                    Console.WriteLine("Order: 2 num next states: " + nextStates2.Count);
+                    nextLeaf = GetNextRandomLeaf(workingQueue, chain2, rand);
+                }
+                else
+                {
+                    Dictionary<string, int> nextStates1 = chain1.GetNextStates(workingQueue);
+                    if (nextStates1 != null)
+                    {
+                        Console.WriteLine("Order: 1 num next states: " + nextStates1.Count);
+                        nextLeaf = GetNextRandomLeaf(workingQueue, chain1, rand);
+                    }
+                }
+
+                if (nextLeaf != null)
+                {
+                    yield return nextLeaf;
+                    workingQueue.Enqueue(nextLeaf);
+                }
+                else
+                {
+                    yield break;
+                }
+            }
+        }
+
+        public static string GetNextRandomLeaf( IEnumerable<string> previous, MarkovChain<string> chain, Random rand )
+        {
+            Dictionary<string, int> nextStates = chain.GetNextStates(previous);
+
+            if ( nextStates is null )
+            {
+                return null;
+            }
+
+            int totalNonTerminalWeight = nextStates.Sum(w => w.Value);
+
+            int terminalWeight = chain.GetTerminalWeight(previous);
+            int randomValue = rand.Next(totalNonTerminalWeight + terminalWeight) + 1;
+
+            if (randomValue > totalNonTerminalWeight)
+            {
+                return null;
+            }
+
+            int currentWeight = 0;
+            foreach (var nextItem in nextStates)
+            {
+                currentWeight += nextItem.Value;
+                if (currentWeight >= randomValue)
+                {
+                    return nextItem.Key;
+                }
+            }
+
+            return null;
+        }
+
         public static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -26,26 +109,27 @@ namespace CaptainRexEbooks
             //EvaluateCorpus();
             //EvaluateOrders();
 
-            // string[] quotes = GetQuotes();
+            string[] quotes = GetQuotes();
 
-            // for (int i = 0; i < 10; i++)
-            // {
-            //     string quote = GenerateQuote();
-            //     bool isCopy = false;
-            //     foreach ( string inputQuote in quotes )
-            //     {
-            //         if (inputQuote.Contains(quote))
-            //         {
-            //             isCopy = true;
-            //             break;
-            //         }
-            //     }
-            //     Console.WriteLine(quote + " " + isCopy);
-            // }
+            for (int i = 0; i < 20; i++)
+            {
+                // string quote = GenerateQuote();
+                // bool isCopy = false;
+                // foreach ( string inputQuote in quotes )
+                // {
+                //     if (inputQuote.Contains(quote))
+                //     {
+                //         isCopy = true;
+                //         break;
+                //     }
+                // }
+                // Console.WriteLine(quote + " " + isCopy);
+                ChainWithBackoff(i);
+            }
 
-            string quote = GenerateQuote();
+            //string quote = GenerateQuote();
 
-            TweetQuote(quote);
+            //TweetQuote(quote);
         }
 
         static void InitializeTwitterCredentials()
