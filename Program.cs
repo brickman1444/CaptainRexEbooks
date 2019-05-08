@@ -21,16 +21,17 @@ namespace CaptainRexEbooks
         {
             var chain1 = GetChain(1);
             var chain2 = GetChain(2);
+            var chain3 = GetChain(3);
 
             Random rand = new Random(seed);
 
-            List<string> result = new List<string>(Generator( Enumerable.Empty<string>(), chain1, chain2, rand ));
+            List<string> result = new List<string>(Generator( Enumerable.Empty<string>(), chain1, chain2, chain3, rand ));
             Debug.Assert( result != null);
             string joinedString = string.Join(" ", result);
             Console.WriteLine(joinedString);
         }
 
-        public static IEnumerable<string> Generator( IEnumerable<string> previous, MarkovChain<string> chain1, MarkovChain<string> chain2, Random rand )
+        public static IEnumerable<string> Generator( IEnumerable<string> previous, MarkovChain<string> chain1, MarkovChain<string> chain2, MarkovChain<string> chain3, Random rand )
         {
             Queue<string> workingQueue = new Queue<string>(previous);
 
@@ -38,20 +39,32 @@ namespace CaptainRexEbooks
             {
                 string nextLeaf = null;
 
+                Dictionary<string, int> nextStates3 = chain3.GetNextStates(workingQueue);
+                int numStates3 = ( nextStates3 != null ? nextStates3.Count : 0 );
+                Console.WriteLine("Order: 3 num next states: " + numStates3);
+                
                 Dictionary<string, int> nextStates2 = chain2.GetNextStates(workingQueue);
-                if (nextStates2 != null && nextStates2.Count >= 2)
+                int numStates2 = ( nextStates2 != null ? nextStates2.Count : 0 );
+                Console.WriteLine("Order: 2 num next states: " + numStates2);
+                
+                Dictionary<string, int> nextStates1 = chain1.GetNextStates(workingQueue);
+                int numStates1 = ( nextStates1 != null ? nextStates1.Count : 0 );
+                Console.WriteLine("Order: 1 num next states: " + numStates1);
+
+                if (numStates3 >= 2)
                 {
-                    Console.WriteLine("Order: 2 num next states: " + nextStates2.Count);
+                    Console.WriteLine("Choosing 3");
+                    nextLeaf = GetNextRandomLeaf(workingQueue, chain3, rand);
+                }
+                else if (numStates2 >= 2)
+                {
+                    Console.WriteLine("Choosing 2");
                     nextLeaf = GetNextRandomLeaf(workingQueue, chain2, rand);
                 }
-                else
+                else if (numStates1 >= 1)
                 {
-                    Dictionary<string, int> nextStates1 = chain1.GetNextStates(workingQueue);
-                    if (nextStates1 != null)
-                    {
-                        Console.WriteLine("Order: 1 num next states: " + nextStates1.Count);
-                        nextLeaf = GetNextRandomLeaf(workingQueue, chain1, rand);
-                    }
+                    Console.WriteLine("Choosing 1");
+                    nextLeaf = GetNextRandomLeaf(workingQueue, chain1, rand);
                 }
 
                 if (nextLeaf != null)
