@@ -20,85 +20,18 @@ namespace CaptainRexEbooks
         public static void ChainWithBackoff(int seed)
         {
             Random rand = new Random(seed);
+            MarkovChainWithBackoff<string> chain = new MarkovChainWithBackoff<string>(3, 2);
 
-            List<string> result = new List<string>(Generator( Enumerable.Empty<string>(), 3, 2, rand ));
+            foreach (string sourceQuote in GetQuotes() )
+            {
+                string[] words = sourceQuote.Split(' ');
+                chain.Add(words);
+            }
+
+            IEnumerable<string> result = chain.Chain(rand);
             Debug.Assert( result != null);
             string joinedString = string.Join(" ", result);
             Console.WriteLine(joinedString);
-        }
-
-        public static IEnumerable<string> Generator( IEnumerable<string> previous, int maxOrder, int targetNumNextStates, Random rand )
-        {
-            Queue<string> workingQueue = new Queue<string>(previous);
-
-            List<MarkovChain<string>> chains = new List<MarkovChain<string>>();
-
-            for ( int order = maxOrder; order > 0; order--)
-            {
-                chains.Add(GetChain(order));
-            }
-
-            while (true)
-            {
-                string nextLeaf = null;
-
-                //Console.WriteLine("----------------------------------------");
-
-                foreach ( MarkovChain<string> chain in chains )
-                {
-                    Dictionary<string, int> nextStates = chain.GetNextStates(workingQueue);
-                    int numStates = ( nextStates != null ? nextStates.Count : 0 );
-                    //Console.WriteLine("Num next states: " + numStates);
-
-                    if ( numStates >= targetNumNextStates || chain == chains.Last() )
-                    {
-                        nextLeaf = GetNextRandomLeaf(workingQueue, chain, rand);
-                        break;
-                    }
-                }
-
-                if (nextLeaf != null)
-                {
-                    yield return nextLeaf;
-                    workingQueue.Enqueue(nextLeaf);
-                }
-                else
-                {
-                    yield break;
-                }
-            }
-        }
-
-        public static string GetNextRandomLeaf( IEnumerable<string> previous, MarkovChain<string> chain, Random rand )
-        {
-            Dictionary<string, int> nextStates = chain.GetNextStates(previous);
-
-            if ( nextStates is null )
-            {
-                return null;
-            }
-
-            int totalNonTerminalWeight = nextStates.Sum(w => w.Value);
-
-            int terminalWeight = chain.GetTerminalWeight(previous);
-            int randomValue = rand.Next(totalNonTerminalWeight + terminalWeight) + 1;
-
-            if (randomValue > totalNonTerminalWeight)
-            {
-                return null;
-            }
-
-            int currentWeight = 0;
-            foreach (var nextItem in nextStates)
-            {
-                currentWeight += nextItem.Value;
-                if (currentWeight >= randomValue)
-                {
-                    return nextItem.Key;
-                }
-            }
-
-            return null;
         }
 
         public static void Main(string[] args)
