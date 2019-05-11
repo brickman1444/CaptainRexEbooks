@@ -28,26 +28,26 @@ namespace CaptainRexEbooks
             //EvaluateCorpus();
             //EvaluateOrders();
 
-            string[] quotes = GetQuotes();
+            // string[] quotes = GetQuotes();
 
-            for (int i = 0; i < 20; i++)
-            {
-                string quote = GenerateQuoteWithBackoff();
-                bool isCopy = false;
-                foreach ( string inputQuote in quotes )
-                {
-                    if (inputQuote.Contains(quote))
-                    {
-                        isCopy = true;
-                        break;
-                    }
-                }
-                Console.WriteLine(quote + " " + isCopy);
-            }
+            // for (int i = 0; i < 20; i++)
+            // {
+            //     string quote = GenerateQuoteWithBackoff();
+            //     bool isCopy = false;
+            //     foreach ( string inputQuote in quotes )
+            //     {
+            //         if (inputQuote.Contains(quote))
+            //         {
+            //             isCopy = true;
+            //             break;
+            //         }
+            //     }
+            //     Console.WriteLine(quote + " " + isCopy);
+            // }
 
-            //string quote = GenerateQuote();
+            string quote = GenerateQuoteWithBackoff();
 
-            //TweetQuote(quote);
+            TweetQuote(quote);
         }
 
         static void InitializeTwitterCredentials()
