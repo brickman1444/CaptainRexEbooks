@@ -19,52 +19,42 @@ namespace CaptainRexEbooks
 
         public static void ChainWithBackoff(int seed)
         {
-            var chain1 = GetChain(1);
-            var chain2 = GetChain(2);
-            var chain3 = GetChain(3);
-
             Random rand = new Random(seed);
 
-            List<string> result = new List<string>(Generator( Enumerable.Empty<string>(), chain1, chain2, chain3, rand ));
+            List<string> result = new List<string>(Generator( Enumerable.Empty<string>(), 3, 2, rand ));
             Debug.Assert( result != null);
             string joinedString = string.Join(" ", result);
             Console.WriteLine(joinedString);
         }
 
-        public static IEnumerable<string> Generator( IEnumerable<string> previous, MarkovChain<string> chain1, MarkovChain<string> chain2, MarkovChain<string> chain3, Random rand )
+        public static IEnumerable<string> Generator( IEnumerable<string> previous, int maxOrder, int targetNumNextStates, Random rand )
         {
             Queue<string> workingQueue = new Queue<string>(previous);
+
+            List<MarkovChain<string>> chains = new List<MarkovChain<string>>();
+
+            for ( int order = maxOrder; order > 0; order--)
+            {
+                chains.Add(GetChain(order));
+            }
 
             while (true)
             {
                 string nextLeaf = null;
 
-                Dictionary<string, int> nextStates3 = chain3.GetNextStates(workingQueue);
-                int numStates3 = ( nextStates3 != null ? nextStates3.Count : 0 );
-                Console.WriteLine("Order: 3 num next states: " + numStates3);
-                
-                Dictionary<string, int> nextStates2 = chain2.GetNextStates(workingQueue);
-                int numStates2 = ( nextStates2 != null ? nextStates2.Count : 0 );
-                Console.WriteLine("Order: 2 num next states: " + numStates2);
-                
-                Dictionary<string, int> nextStates1 = chain1.GetNextStates(workingQueue);
-                int numStates1 = ( nextStates1 != null ? nextStates1.Count : 0 );
-                Console.WriteLine("Order: 1 num next states: " + numStates1);
+                //Console.WriteLine("----------------------------------------");
 
-                if (numStates3 >= 2)
+                foreach ( MarkovChain<string> chain in chains )
                 {
-                    Console.WriteLine("Choosing 3");
-                    nextLeaf = GetNextRandomLeaf(workingQueue, chain3, rand);
-                }
-                else if (numStates2 >= 2)
-                {
-                    Console.WriteLine("Choosing 2");
-                    nextLeaf = GetNextRandomLeaf(workingQueue, chain2, rand);
-                }
-                else if (numStates1 >= 1)
-                {
-                    Console.WriteLine("Choosing 1");
-                    nextLeaf = GetNextRandomLeaf(workingQueue, chain1, rand);
+                    Dictionary<string, int> nextStates = chain.GetNextStates(workingQueue);
+                    int numStates = ( nextStates != null ? nextStates.Count : 0 );
+                    //Console.WriteLine("Num next states: " + numStates);
+
+                    if ( numStates >= targetNumNextStates || chain == chains.Last() )
+                    {
+                        nextLeaf = GetNextRandomLeaf(workingQueue, chain, rand);
+                        break;
+                    }
                 }
 
                 if (nextLeaf != null)
