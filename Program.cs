@@ -17,23 +17,6 @@ namespace CaptainRexEbooks
             return inputStream;
         }
 
-        public static void ChainWithBackoff(int seed)
-        {
-            Random rand = new Random(seed);
-            MarkovChainWithBackoff<string> chain = new MarkovChainWithBackoff<string>(3, 2);
-
-            foreach (string sourceQuote in GetQuotes() )
-            {
-                string[] words = sourceQuote.Split(' ');
-                chain.Add(words);
-            }
-
-            IEnumerable<string> result = chain.Chain(rand);
-            Debug.Assert( result != null);
-            string joinedString = string.Join(" ", result);
-            Console.WriteLine(joinedString);
-        }
-
         public static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -49,18 +32,17 @@ namespace CaptainRexEbooks
 
             for (int i = 0; i < 20; i++)
             {
-                // string quote = GenerateQuote();
-                // bool isCopy = false;
-                // foreach ( string inputQuote in quotes )
-                // {
-                //     if (inputQuote.Contains(quote))
-                //     {
-                //         isCopy = true;
-                //         break;
-                //     }
-                // }
-                // Console.WriteLine(quote + " " + isCopy);
-                ChainWithBackoff(i);
+                string quote = GenerateQuoteWithBackoff();
+                bool isCopy = false;
+                foreach ( string inputQuote in quotes )
+                {
+                    if (inputQuote.Contains(quote))
+                    {
+                        isCopy = true;
+                        break;
+                    }
+                }
+                Console.WriteLine(quote + " " + isCopy);
             }
 
             //string quote = GenerateQuote();
@@ -70,14 +52,14 @@ namespace CaptainRexEbooks
 
         static void InitializeTwitterCredentials()
         {
-            string consumerKey = System.Environment.GetEnvironmentVariable ("twitterConsumerKey");
-            string consumerSecret = System.Environment.GetEnvironmentVariable ("twitterConsumerSecret");
-            string accessToken = System.Environment.GetEnvironmentVariable ("twitterAccessToken");
-            string accessTokenSecret = System.Environment.GetEnvironmentVariable ("twitterAccessTokenSecret");
+            string consumerKey = System.Environment.GetEnvironmentVariable("twitterConsumerKey");
+            string consumerSecret = System.Environment.GetEnvironmentVariable("twitterConsumerSecret");
+            string accessToken = System.Environment.GetEnvironmentVariable("twitterAccessToken");
+            string accessTokenSecret = System.Environment.GetEnvironmentVariable("twitterAccessTokenSecret");
 
             if (consumerKey == null)
             {
-                using ( StreamReader fs = File.OpenText( "localconfig/twitterKeys.txt" ) )
+                using (StreamReader fs = File.OpenText("localconfig/twitterKeys.txt"))
                 {
                     consumerKey = fs.ReadLine();
                     consumerSecret = fs.ReadLine();
@@ -89,7 +71,7 @@ namespace CaptainRexEbooks
             Tweetinvi.Auth.SetUserCredentials(consumerKey, consumerSecret, accessToken, accessTokenSecret);
         }
 
-        static void TweetQuote( string quote )
+        static void TweetQuote(string quote)
         {
             Console.WriteLine("Publishing tweet: " + quote);
             var tweet = Tweetinvi.Tweet.PublishTweet(quote);
@@ -100,7 +82,7 @@ namespace CaptainRexEbooks
             Random rand = new Random();
 
             int order = 1;
-            if ( rand.NextDouble() > 0.5 )
+            if (rand.NextDouble() > 0.5)
             {
                 // Add a small chance of a higher order chain. The higher order chains
                 // produce output that is a lot closer to the source text. Too close
@@ -113,34 +95,66 @@ namespace CaptainRexEbooks
             MarkovChain<string> chain = GetChain(order);
 
             string generatedQuote = string.Join(" ", chain.Chain(rand));
-            
+
+            return TruncateQuote(generatedQuote);
+        }
+
+        static string GenerateQuoteWithBackoff()
+        {
+            Random rand = new Random();
+
+            // Order 3 is the highest order that actually makes a meaningful difference.
+            // Targeting 2 next states seems like it hits a balance of high and low orders.
+            MarkovChainWithBackoff<string> chain = GetChainWithBackoff(3, 2);
+
+            IEnumerable<string> result = chain.Chain(rand);
+            string generatedQuote = string.Join(" ", result);
+
+            return TruncateQuote(generatedQuote);
+        }
+
+        static string TruncateQuote(string quote)
+        {
             // Truncate long quotes to one sentence
-            if ( generatedQuote.Length >= 140 )
+            if (quote.Length < 140)
             {
-                char[] sentenceEnders = new char[] { '.', '!', '?' };
-
-                int earliestSentenceEnderIndex = Int32.MaxValue;
-                foreach ( char ender in sentenceEnders )
-                {
-                    int enderIndex = generatedQuote.IndexOf( ender );
-                    if ( enderIndex > 0 && enderIndex < earliestSentenceEnderIndex )
-                    {
-                        earliestSentenceEnderIndex = enderIndex;
-                    }
-                }
-                Console.WriteLine("truncating quote. Original: " + generatedQuote);
-
-                generatedQuote = generatedQuote.Substring(0,earliestSentenceEnderIndex + 1);
+                return quote;
             }
 
-            return generatedQuote;
+            char[] sentenceEnders = new char[] { '.', '!', '?' };
+
+            int earliestSentenceEnderIndex = Int32.MaxValue;
+            foreach (char ender in sentenceEnders)
+            {
+                int enderIndex = quote.IndexOf(ender);
+                if (enderIndex > 0 && enderIndex < earliestSentenceEnderIndex)
+                {
+                    earliestSentenceEnderIndex = enderIndex;
+                }
+            }
+            Console.WriteLine("truncating quote. Original: " + quote);
+
+            return quote.Substring(0, earliestSentenceEnderIndex + 1);
         }
 
         static MarkovChain<string> GetChain(int order)
         {
             MarkovChain<string> chain = new MarkovChain<string>(order);
 
-            foreach (string sourceQuote in GetQuotes() )
+            foreach (string sourceQuote in GetQuotes())
+            {
+                string[] words = sourceQuote.Split(' ');
+                chain.Add(words);
+            }
+
+            return chain;
+        }
+
+        static MarkovChainWithBackoff<string> GetChainWithBackoff(int maxOrder, int desiredNumNextStates)
+        {
+            MarkovChainWithBackoff<string> chain = new MarkovChainWithBackoff<string>(maxOrder, desiredNumNextStates);
+
+            foreach (string sourceQuote in GetQuotes())
             {
                 string[] words = sourceQuote.Split(' ');
                 chain.Add(words);
@@ -181,16 +195,16 @@ namespace CaptainRexEbooks
             HashSet<string> uniqueWords = new HashSet<string>();
             int numTotalWords = 0;
 
-            foreach ( string line in quotes )
+            foreach (string line in quotes)
             {
                 string[] words = line.Split(' ');
 
                 numTotalWords += words.Length;
-                uniqueWords.UnionWith( words );
+                uniqueWords.UnionWith(words);
 
-                foreach ( string word in words )
+                foreach (string word in words)
                 {
-                    if ( word == null || word == "" )
+                    if (word == null || word == "")
                     {
                         throw new Exception("Invalid string in corpus.");
                     }
