@@ -19,7 +19,7 @@ namespace CaptainRexEbooks
 
         public class CustomJsonLanguageConverter : Tweetinvi.Logic.JsonConverters.JsonLanguageConverter
         {
-            public override object ReadJson( Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
             {
                 return reader.Value != null
                     ? base.ReadJson(reader, objectType, existingValue, serializer)
@@ -33,30 +33,52 @@ namespace CaptainRexEbooks
 
             Console.WriteLine("Beginning program");
 
+            if (args.Length != 0 && args[0] == "sample-output")
+            {
+                SampleOutput();
+            }
+            else if (args.Length != 0 && args[0] == "evalutate-corpus-and-orders")
+            {
+                EvaluateCorpusAndOrders();
+            }
+            else
+            {
+                GenerateQuoteAndTweet();
+            }
+        }
+
+        static void SampleOutput()
+        {
+            string[] quotes = GetQuotes();
+
+            for (int i = 0; i < 20; i++)
+            {
+                string quote = GenerateQuoteWithBackoff();
+                bool isCopy = false;
+                foreach (string inputQuote in quotes)
+                {
+                    if (inputQuote.Contains(quote))
+                    {
+                        isCopy = true;
+                        break;
+                    }
+                }
+                Console.WriteLine(quote + " Is Copy: " + isCopy);
+            }
+        }
+
+        static void EvaluateCorpusAndOrders()
+        {
+            EvaluateCorpus();
+            EvaluateOrders();
+        }
+
+        static void GenerateQuoteAndTweet()
+        {
             InitializeTwitterCredentials();
 
             Tweetinvi.Logic.JsonConverters.JsonPropertyConverterRepository.JsonConverters.Remove(typeof(Tweetinvi.Models.Language));
-            Tweetinvi.Logic.JsonConverters.JsonPropertyConverterRepository.JsonConverters.Add(typeof(Tweetinvi.Models.Language), new CustomJsonLanguageConverter()); // your brand new json converter with workaround
-
-            //EvaluateCorpus();
-            //EvaluateOrders();
-
-            // string[] quotes = GetQuotes();
-
-            // for (int i = 0; i < 20; i++)
-            // {
-            //     string quote = GenerateQuoteWithBackoff();
-            //     bool isCopy = false;
-            //     foreach ( string inputQuote in quotes )
-            //     {
-            //         if (inputQuote.Contains(quote))
-            //         {
-            //             isCopy = true;
-            //             break;
-            //         }
-            //     }
-            //     Console.WriteLine(quote + " " + isCopy);
-            // }
+            Tweetinvi.Logic.JsonConverters.JsonPropertyConverterRepository.JsonConverters.Add(typeof(Tweetinvi.Models.Language), new CustomJsonLanguageConverter());
 
             string quote = GenerateQuoteWithBackoff();
 
