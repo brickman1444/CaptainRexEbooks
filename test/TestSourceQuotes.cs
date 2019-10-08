@@ -24,5 +24,13 @@ namespace CaptainRexEbooks
         {
             Assert.False(Program.GetQuotes().HasDuplicateEntries());
         }
+
+        [Fact]
+        public static void SourceQuotes_AllHaveEnders()
+        {
+            const string enders = ".?!";
+            string quoteWithoutEnder = Program.GetQuotes().FirstOrDefault( quote => !enders.Contains(quote.Last()) );
+            Assert.Null(quoteWithoutEnder);
+        }
     }
 }
