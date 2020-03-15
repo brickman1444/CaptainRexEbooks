@@ -309,7 +309,7 @@ namespace CaptainRexEbooks
                 "Do you have any idea what you've done?",
                 "Doesn't matter, kid. We have to retake this base, so we will retake this base.",
                 "Don't do a job till you've guaranteed the best odds, right?",
-                "Don't worry about a thing, SIr. We'll have this city under Republic control by the time you're back.",
+                "Don't worry about a thing, Sir. We'll have this city under Republic control by the time you're back.",
                 "Don't worry, kid. I'll take good care of him.",
                 "Easy. Our turbolasers are no match for that Star Destroyer.",
                 "Echo, it's Rex. I'm here.",
