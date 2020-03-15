@@ -28,9 +28,12 @@ namespace CaptainRexEbooks
         [Fact]
         public static void SourceQuotes_AllHaveEnders()
         {
-            const string enders = ".?!";
-            string quoteWithoutEnder = Program.GetQuotes().FirstOrDefault( quote => !enders.Contains(quote.Last()) );
-            Assert.Null(quoteWithoutEnder);
+            string[] enders = { ".", "?", "!", "\"" };
+
+            foreach ( string quote in Program.GetQuotes() )
+            {
+                Assert.Contains( enders, ender => quote.EndsWith( ender ) );
+            }
         }
     }
 }
