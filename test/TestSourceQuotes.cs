@@ -8,21 +8,15 @@ namespace CaptainRexEbooks
     public static class TestSourceQuotes
     {
         [Fact]
-        public static void SourceQuotes_AreSorted()
-        {
-            string firstUnsortedValue = Program.GetQuotes().GetFirstUnsortedElement(null);
-
-            var quotes = Program.GetQuotes();
-            Array.Sort(quotes);
-            Console.WriteLine(quotes);
-
-            Assert.Null(firstUnsortedValue);
-        }
-
-        [Fact]
         public static void SourceQuotes_DontContainDuplicateEntries()
         {
-            Assert.False(Program.GetQuotes().HasDuplicateEntries());
+            List<string> quotesSoFar = new List<string>();
+            foreach (string quote in Program.GetQuotes())
+            {
+                Assert.DoesNotContain(quote, quotesSoFar);
+                quotesSoFar.Add(quote);
+            }
+            Assert.Equal(Program.GetQuotes().Count(), quotesSoFar.Count());
         }
 
         [Fact]
@@ -30,9 +24,10 @@ namespace CaptainRexEbooks
         {
             string[] enders = { ".", "?", "!", "\"" };
 
-            foreach ( string quote in Program.GetQuotes() )
+            foreach (string quote in Program.GetQuotes())
             {
-                Assert.Contains( enders, ender => quote.EndsWith( ender ) );
+                bool quoteEndsWithEnder = enders.Any(ender => quote.EndsWith(ender));
+                Assert.True(quoteEndsWithEnder, "Quote [" + quote + "] doesn't end with a valid ender.");
             }
         }
     }
