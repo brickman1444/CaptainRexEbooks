@@ -21,13 +21,13 @@ jobs:
       run: dotnet test
 
     - name: Build Lambda package
-      run: dotnet lambda package --configuration Release --framework netcoreapp2.1 --output-package bin/Release/netcoreapp2.1/AntiqueAppraisalBot.zip
+      run: dotnet lambda package --configuration Release --framework netcoreapp2.1 --output-package bin/Release/netcoreapp2.1/package.zip
 
     - name: Update Lambda
       uses: kazimanzurrashid/aws-lambda-update-action@v1
       with:
-        zip-file: bin/Release/netcoreapp2.1/AntiqueAppraisalBot.zip
-        lambda-name: AppraisalBotFunction
+        zip-file: bin/Release/netcoreapp2.1/package.zip
+        lambda-name: CaptainRexEbooksFunction
       env:
         AWS_REGION: ${{ secrets.AWS_REGION }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
