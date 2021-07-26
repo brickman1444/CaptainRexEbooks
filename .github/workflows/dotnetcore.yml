@@ -12,7 +12,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 2.2.108
+        dotnet-version: 3.1.411
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
@@ -20,13 +20,16 @@ jobs:
     - name: Run Tests
       run: dotnet test
 
+    - name: Install AWS Tools
+      run: dotnet tool install -g Amazon.Lambda.Tools
+
     - name: Build Lambda package
-      run: dotnet lambda package --configuration Release --framework netcoreapp2.1 --output-package bin/Release/netcoreapp2.1/package.zip
+      run: dotnet lambda package --configuration Release --framework netcoreapp3.1 --output-package bin/Release/netcoreapp3.1/package.zip
 
     - name: Update Lambda
       uses: kazimanzurrashid/aws-lambda-update-action@v1
       with:
-        zip-file: bin/Release/netcoreapp2.1/package.zip
+        zip-file: bin/Release/netcoreapp3.1/package.zip
         lambda-name: CaptainRexEbooksFunction
       env:
         AWS_REGION: ${{ secrets.AWS_REGION }}
