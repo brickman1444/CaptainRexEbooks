@@ -803,6 +803,10 @@ namespace CaptainRexEbooks
                 "I guess we all are. When you sort things out, let me know where you land. Tell the boys I'll see them around.",
                 "Funny. I was gonna say the same to you.",
                 "Take care, trooper.",
+                "Hello, boys. Sorry to cut right to it, but I could use your help.",
+                "I received a distress signal from a clone trooper, but I'm a bit tied up at the moment to retrieve him.",
+                "He's an old friend, and he's in trouble. I need you to get him out.",
+                "Can't talk right now. Sending you his signal. I'll be in touch.",
             };
         }
     }
