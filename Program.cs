@@ -35,7 +35,7 @@ namespace CaptainRexEbooks
             {
                 SampleOutput();
             }
-            else if (args.Length != 0 && args[0] == "evalutate-corpus-and-orders")
+            else if (args.Length != 0 && args[0] == "evaluate-corpus-and-orders")
             {
                 EvaluateCorpusAndOrders();
             }
