@@ -807,6 +807,11 @@ namespace CaptainRexEbooks
                 "I received a distress signal from a clone trooper, but I'm a bit tied up at the moment to retrieve him.",
                 "He's an old friend, and he's in trouble. I need you to get him out.",
                 "Can't talk right now. Sending you his signal. I'll be in touch.",
+                "It's our privilege, Commander.",
+                "Yeah, Jesse really tagged you.",
+                "I don't know how much more of this she can take.",
+                "Not bad. It took us five minutes to knock you out that time.",
+                "Let's hope all that training pays off."
             };
         }
     }
