@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 
+using dotenv.net;
 using Markov;
 
 namespace CaptainRexEbooks
@@ -20,6 +21,8 @@ namespace CaptainRexEbooks
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             Console.WriteLine("Beginning program");
+
+            dotenv.net.DotEnv.Load();
 
             if (args.Length != 0 && args[0] == "sample-output")
             {

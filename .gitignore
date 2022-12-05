@@ -4,3 +4,4 @@ bin/
 images/
 localconfig/
 deploy.zip
+.env

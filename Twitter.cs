@@ -12,17 +12,6 @@ namespace CaptainRexEbooks
             string accessToken = System.Environment.GetEnvironmentVariable("twitterAccessToken");
             string accessTokenSecret = System.Environment.GetEnvironmentVariable("twitterAccessTokenSecret");
 
-            if (consumerKey == null)
-            {
-                using (StreamReader fs = File.OpenText("localconfig/twitterKeys.txt"))
-                {
-                    consumerKey = fs.ReadLine();
-                    consumerSecret = fs.ReadLine();
-                    accessToken = fs.ReadLine();
-                    accessTokenSecret = fs.ReadLine();
-                }
-            }
-
             var userClient = new Tweetinvi.TwitterClient(consumerKey, consumerSecret, accessToken, accessTokenSecret);
 
             Console.WriteLine("Publishing tweet: " + status);
