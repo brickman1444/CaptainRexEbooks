@@ -12,8 +12,9 @@ namespace CaptainRexEbooks
             string accessToken = System.Environment.GetEnvironmentVariable("mastodonAccessToken");
             MastodonClient client = new MastodonClient(instance, accessToken);
 
-            Console.WriteLine("Publishing toot: " + status);
-            return client.PublishStatus(status);
+            string statusWithHashtags = status + "\n#StarWars #CloneWars #Rebels";
+            Console.WriteLine("Publishing toot: " + statusWithHashtags);
+            return client.PublishStatus(statusWithHashtags);
         }
     }
 }
