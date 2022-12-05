@@ -6,7 +6,7 @@
     <AWSProjectType>Lambda</AWSProjectType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="TweetinviAPI" Version="2.1.0" />
+    <PackageReference Include="TweetinviAPI" Version="5.0" />
     <PackageReference Include="Amazon.Lambda.Core" Version="1.0.0" />
     <PackageReference Include="Markov" Version="2.0.1-ci0023" />
     <PackageReference Include="xunit" Version="2.3.1" />

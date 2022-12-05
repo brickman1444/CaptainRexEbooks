@@ -63,8 +63,6 @@ namespace CaptainRexEbooks
 
         static void GenerateQuoteAndTweet()
         {
-            Twitter.InitializeCredentials();
-
             string quote = GenerateQuoteWithBackoff();
 
             Twitter.PostStatus(quote);
