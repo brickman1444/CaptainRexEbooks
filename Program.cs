@@ -34,7 +34,7 @@ namespace CaptainRexEbooks
             }
             else
             {
-                GenerateQuoteAndTweet();
+                GenerateQuoteAndPost();
             }
         }
 
@@ -64,11 +64,12 @@ namespace CaptainRexEbooks
             EvaluateOrders();
         }
 
-        static void GenerateQuoteAndTweet()
+        static void GenerateQuoteAndPost()
         {
             string quote = GenerateQuoteWithBackoff();
 
             Twitter.PostStatus(quote);
+            Mastodon.PostStatus(quote);
         }
 
         static string GenerateQuote()

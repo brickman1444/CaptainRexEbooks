@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="dotenv.net" Version="3.0.0"/>
     <PackageReference Include="TweetinviAPI" Version="5.0" />
+    <PackageReference Include="Mastonet" Version="2.0.2" />
     <PackageReference Include="Amazon.Lambda.Core" Version="1.0.0" />
     <PackageReference Include="Markov" Version="2.0.1-ci0023" />
     <PackageReference Include="xunit" Version="2.3.1" />
