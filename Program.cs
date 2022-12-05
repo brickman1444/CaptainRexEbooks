@@ -1,6 +1,7 @@
 ﻿﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 using dotenv.net;
 using Markov;
@@ -22,7 +23,7 @@ namespace CaptainRexEbooks
 
             Console.WriteLine("Beginning program");
 
-            dotenv.net.DotEnv.Load();
+            DotEnv.Load();
 
             if (args.Length != 0 && args[0] == "sample-output")
             {
@@ -68,8 +69,10 @@ namespace CaptainRexEbooks
         {
             string quote = GenerateQuoteWithBackoff();
 
-            Twitter.PostStatus(quote);
-            Mastodon.PostStatus(quote);
+            Task twitter = Twitter.PostStatus(quote);
+            Task mastodon = Mastodon.PostStatus(quote);
+
+            Task.WaitAll(twitter, mastodon);
         }
 
         static string GenerateQuote()

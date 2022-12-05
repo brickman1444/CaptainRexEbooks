@@ -1,11 +1,11 @@
 using System;
-using System.IO;
+using System.Threading.Tasks;
 
 namespace CaptainRexEbooks
 {
     static class Twitter
     {
-        public static void PostStatus(string status)
+        public static Task PostStatus(string status)
         {
             string consumerKey = System.Environment.GetEnvironmentVariable("twitterConsumerKey");
             string consumerSecret = System.Environment.GetEnvironmentVariable("twitterConsumerSecret");
@@ -15,7 +15,7 @@ namespace CaptainRexEbooks
             var userClient = new Tweetinvi.TwitterClient(consumerKey, consumerSecret, accessToken, accessTokenSecret);
 
             Console.WriteLine("Publishing tweet: " + status);
-            var _ = userClient.Tweets.PublishTweetAsync(status).Result;
+            return userClient.Tweets.PublishTweetAsync(status);
         }
     }
 }
