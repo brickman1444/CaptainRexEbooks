@@ -69,10 +69,9 @@ namespace CaptainRexEbooks
         {
             string quote = GenerateQuoteWithBackoff();
 
-            Task twitter = Twitter.PostStatus(quote);
             Task mastodon = Mastodon.PostStatus(quote);
 
-            Task.WaitAll(twitter, mastodon);
+            Task.WaitAll(mastodon);
         }
 
         static string GenerateQuote()
