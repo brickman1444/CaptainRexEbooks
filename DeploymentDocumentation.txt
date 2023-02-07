@@ -1,4 +1,4 @@
-dotnet lambda package --configuration Release --framework netcoreapp2.1
+dotnet lambda package --configuration Release --framework net6.0
 	Creates .zip file.
 
 Upload zip to amazon lambda
